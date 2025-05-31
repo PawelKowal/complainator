@@ -1,0 +1,34 @@
+---
+description: 
+globs: *.tsx,*.css
+alwaysApply: false
+---
+# AI Code-Generation Rules: React + Material UI (sx prop)
+
+1. Use functional components in TypeScript (`React.FC<Props>`) with React hooks—no class components.
+2. Import UI elements exclusively from `@mui/material` and icons from `@mui/icons-material`.
+3. Style components solely via the `sx` prop; avoid inline `style` attributes and external CSS modules.
+4. Reference theme tokens within `sx` (e.g., `p: 2`, `bgcolor: 'primary.main'`, `typography: 'h6'`).
+5. For theme-dependent logic, use the callback form:
+   ```tsx
+   <Box sx={theme => ({
+     boxShadow: theme.shadows[1],
+     '&:hover': { boxShadow: theme.shadows[4] },
+   })} />
+   ```
+6. Leverage system shorthand properties in `sx` (`m`, `p`, `mt`, `flex`, `display`, etc.).
+7. Handle responsive styles inline:
+   ```tsx
+   <Stack
+     direction={{ xs: 'column', md: 'row' }}
+     spacing={{ xs: 1, md: 2 }}
+   />
+   ```
+8. Favor MUI layout primitives (`Box`, `Stack`, `Grid`) over manual CSS flex or grid.
+9. Extract repeated `sx` objects into shared variables or custom hooks for reusability.
+10. For global or complex styling overrides, use MUI's `styled()` API or extend your theme via `createTheme`.
+11. Always prefer theme tokens over hard-coded values for colors, spacing, and typography.
+12. Ensure accessibility: include `aria-*`, `alt` attributes, and custom focus-ring styles via `sx`.
+13. Adhere to clean-code practices: use guard clauses, early returns, clear prop types, and default values.
+
+
