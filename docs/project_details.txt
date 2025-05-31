@@ -1,0 +1,69 @@
+<conversation_summary>
+<decisions>
+1. Retrospektywa otrzymuje nazwę w szablonie „Sprint #{numer} – {data}”, gdzie użytkownik wpisuje numer sprintu, a data w formacie DD.MM.YYYY wstawiana jest automatycznie.  
+2. Każda sesja jest jednoosobowa – tylko jeden użytkownik korzysta z tablicy.  
+3. Notatki dzielą się na trzy kategorie („Uwagi pozytywne”, „Uwagi neutralne”, „Uwagi negatywne”) i wyświetlane są w trzech kolorowych kolumnach.  
+4. Użytkownik nie może edytować ani usuwać notatek po utworzeniu.  
+5. Po zebraniu notatek AI generuje pełne podsumowanie wniosków; użytkownik może jedynie zaakceptować lub odrzucić każdą sugestię, przy czym zapisywane są tylko zaakceptowane.  
+6. Widok ogólny (dashboard) wyświetla listę retrospektyw z nazwą, datą i pełnym podsumowaniem AI; widok szczegółowy pokazuje wszystkie notatki i wnioski.  
+7. Brak możliwości edycji czy usuwania zakończonych retrospektyw – tylko podgląd.  
+8. Podstawowe uwierzytelnianie e-mail/hasło bez weryfikacji czy resetu.  
+9. UI zbudowane w React, z przyciskiem „Nowa retrospektywa” w nagłówku, przyciskiem „Dodaj notatkę” i trzema kolumnami.  
+10. Obsługa błędów: wyświetlanie komunikatu „Wystąpił błąd, spróbuj ponownie później”; logowanie wszystkich żądań i błędów na backendzie na odpowiednich poziomach.  
+11. Dane retrospektywy przechowujemy na stałe z polami `createdAt`, `acceptedCount` oraz `rejectedCount`; brak archiwizacji czy usuwania.  
+12. UI responsywne dla desktopów i tabletów (min. rozdzielczość 1024×768).  
+13. Testy jednostkowe dla kluczowej logiki (nazewnictwo, proces tworzenia i podglądu retrospektywy).  
+14. Za realizację odpowiada jeden deweloper wspomagany AI, przy niskim wolumenie danych.  
+</decisions>
+
+<matched_recommendations>
+1. Wdrożyć generator nazwy retrospektywy z automatycznym wstawianiem aktualnej daty.  
+2. Zaprojektować dashboard pokazujący nazwę, datę i pełne podsumowanie AI w widoku ogólnym.  
+3. Stworzyć widok szczegółowy z trzema kolorowymi kolumnami notatek.  
+4. Użyć React do implementacji UI z przyciskami „Nowa retrospektywa” w nagłówku i „Dodaj notatkę”.  
+5. Zaimplementować podstawowe uwierzytelnianie e-mail/hasło.  
+6. Opracować globalny komponent obsługi błędów z komunikatem „Wystąpił błąd, spróbuj ponownie później”.  
+7. Skonfigurować backendowy logger do zapisywania wszystkich żądań i błędów.  
+8. Rozszerzyć model danych o pola `createdAt`, `acceptedCount` i `rejectedCount`.  
+9. Zdefiniować breakpoint CSS dla min-width 1024px w celu responsywności desktop/tablet.  
+10. Dodać testy jednostkowe dla logiki nazewnictwa i ścieżki retrospektywy.  
+</matched_recommendations>
+
+<prd_planning_summary>
+a. Główne wymagania funkcjonalne:
+- Uwierzytelnianie e-mail/hasło.  
+- Tworzenie retrospektywy z nazwą „Sprint #{nr} – DD.MM.YYYY”.  
+- Dodawanie notatek w trzech kategoriach przez przycisk „Dodaj notatkę”.  
+- Generowanie przez AI pełnego podsumowania wniosków.  
+- Akceptacja/odrzucanie wniosków AI (tylko zaakceptowane zapisywane).  
+- Dashboard z listą retrospektyw (nazwa, data, podsumowanie).  
+- Widok szczegółowy z notatkami i wnioskami.  
+- Obsługa błędów z jednolitym komunikatem i backendowe logowanie.  
+- Przechowywanie danych (createdAt, acceptedCount, rejectedCount) bez usuwania.  
+- UI w React, responsywne dla min. 1024×768.  
+- Testy jednostkowe kluczowej logiki.  
+
+b. Kluczowe historie użytkownika i ścieżki:
+1. Logowanie do aplikacji.  
+2. Tworzenie nowej retrospektywy przez kliknięcie „Nowa retrospektywa” i wpisanie numeru sprintu.  
+3. Dodawanie notatek w trzech kategoriach.  
+4. Uruchomienie AI i przegląd wygenerowanych wniosków.  
+5. Akceptacja lub odrzucenie wniosków.  
+6. Przeglądanie listy retrospektyw na dashboardzie.  
+7. Wejście w podgląd szczegółowy danej retrospektywy.  
+
+c. Kryteria sukcesu i metryki:
+- Osiągnięcie co najmniej 50% akceptacji wniosków AI.  
+- Monitorowanie pól `acceptedCount` i `rejectedCount` dla każdej retrospektywy.  
+- Sprawne działanie podstawowego uwierzytelniania i logowania błędów.  
+- Poprawność wyświetlania UI na desktopie i tablecie.  
+- Pokrycie kluczowej logiki testami jednostkowymi.  
+
+d. Nierozwiązane kwestie:
+Brak istotnych nierozwiązanych zagadnień – wszystkie kluczowe decyzje zostały doprecyzowane.  
+</prd_planning_summary>
+
+<unresolved_issues>
+Brak  
+</unresolved_issues>
+</conversation_summary>

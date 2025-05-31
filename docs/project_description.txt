@@ -1,0 +1,20 @@
+# Aplikacja - Complainator (MVP)
+
+## Główny problem
+Przygotowywanie tablic do retrospektyw za kazdym razem zajmuje czas, a wyciąganie wniosków z zanotowanych uwag jest trudne.
+Aplikacja dostarcza gotową tablicę do wpisywania uwag o ostatnim sprincie i generuje na ich podstawie wnioski do
+wdrożenia w przyszłości.
+
+## Najmniejszy zestaw funkcjonalności
+- dostarczanie tablic do wpisywania uwag przez użytkownika
+- generowanie wniosków z uwag przez AI
+- przeglądanie zakończonych retrospektyw
+- prosty system kont użytkowników do tworzenia nowych i przeglądania zakończonych retrospektyw
+
+## Co NIE wchodzi w zakres MVP
+- dołączenie wielu użytkowników do jednej retrospektywy
+- aplikacja mobilna
+- obsługa multimediów (tylko tekst)
+
+## Kryteria sukcesu
+- 50% wniosków wygenerowanych przez AI jest ocenione jako przydatne
