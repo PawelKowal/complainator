@@ -6,7 +6,6 @@
 - **Retrospectives** (Retrospective)
 - **Notes** (Note)
 - **Suggestions** (Suggestion)
-- **AuditLogs** (AuditLog)
 
 ## 2. Endpoints
 
@@ -145,8 +144,7 @@
 - Path Params: `suggestionId` (UUID)
 - Request JSON:
   { "status": "accepted" | "rejected" }
-- Response 200:
-  { "id": "<UUID>", "status": "accepted", "acceptedCount": 3, "rejectedCount": 1 }
+- Response 204
 - Errors:
   400 Bad Request (invalid status)
   401 Unauthorized

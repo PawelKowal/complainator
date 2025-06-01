@@ -1,0 +1,71 @@
+using System;
+using System.Text.Json.Serialization;
+
+namespace ComplainatorAPI.DTO
+{
+    public class RetrospectiveListRequest
+    {
+        public int Page { get; set; } = 1;
+        public int PerPage { get; set; } = 10;
+        
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        public SortOrder Sort { get; set; } = SortOrder.DateDesc;
+    }
+
+    public enum SortOrder
+    {
+        DateDesc,
+        DateAsc
+    }
+
+    public class RetrospectiveListResponse
+    {
+        public List<RetrospectiveListItem> Items { get; set; } = new();
+        public int Total { get; set; }
+        public int Page { get; set; }
+        public int PerPage { get; set; }
+    }
+
+    public class RetrospectiveListItem
+    {
+        public Guid Id { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public DateTime Date { get; set; }
+        public List<SuggestionListItem> AcceptedSuggestions { get; set; } = new();
+    }
+
+    public class SuggestionListItem
+    {
+        public Guid Id { get; set; }
+        public string SuggestionText { get; set; } = string.Empty;
+    }
+
+    public class CreateRetrospectiveResponse
+    {
+        public Guid Id { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public DateTime Date { get; set; }
+    }
+
+    public class RetrospectiveDetailResponse
+    {
+        public Guid Id { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public DateTime Date { get; set; }
+        public RetrospectiveNotes Notes { get; set; } = new();
+        public List<SuggestionListItem> AcceptedSuggestions { get; set; } = new();
+    }
+
+    public class RetrospectiveNotes
+    {
+        public List<NoteDto> ImprovementArea { get; set; } = new();
+        public List<NoteDto> Observation { get; set; } = new();
+        public List<NoteDto> Success { get; set; } = new();
+    }
+
+    public class NoteDto
+    {
+        public Guid Id { get; set; }
+        public string Content { get; set; } = string.Empty;
+    }
+} 
