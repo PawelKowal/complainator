@@ -26,6 +26,40 @@ namespace ComplainatorAPI.Services
             _logger = logger;
         }
 
+        public async Task<LoginResponse> LoginAsync(LoginRequest request)
+        {
+            // Find user by email
+            var user = await _userManager.FindByEmailAsync(request.Email);
+            if (user == null)
+            {
+                _logger.LogWarning("Login attempt with non-existent email: {Email}", request.Email);
+                throw new UnauthorizedAccessException();
+            }
+
+            // Verify password
+            var isPasswordValid = await _userManager.CheckPasswordAsync(user, request.Password);
+            if (!isPasswordValid)
+            {
+                _logger.LogWarning("Invalid password attempt for user: {Email}", request.Email);
+                throw new UnauthorizedAccessException();
+            }
+
+            // Generate JWT token
+            var token = GenerateJwtToken(user);
+
+            _logger.LogInformation("User logged in successfully: {Email}", request.Email);
+
+            return new LoginResponse
+            {
+                Token = token,
+                User = new UserDto
+                {
+                    Id = user.Id,
+                    Email = user.Email!
+                }
+            };
+        }
+
         public async Task<RegisterResponse> RegisterAsync(RegisterRequest request)
         {
             // Check if user exists
