@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using ComplainatorAPI.Domain.Entities;
+using ComplainatorAPI.Extensions;
 using ComplainatorAPI.Middleware;
 using ComplainatorAPI.Persistence;
 
@@ -17,6 +18,17 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddIdentity<ApplicationUser, IdentityRole<Guid>>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
+
+// Configure CORS
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
 
 // Configure JWT Authentication
 builder.Services.AddAuthentication(options =>
@@ -41,9 +53,15 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+// Add application services
+builder.Services.AddApplicationServices(builder.Configuration);
+
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddControllers();
+builder.Services.AddControllers(options =>
+{
+    options.EnableEndpointRouting = true;
+});
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddOpenApi();
 
@@ -52,14 +70,20 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 // Add request logging and global error handling
 app.UseRequestLogging();
-app.UseGlobalExceptionHandling();
+app.UseCustomExceptionHandling();
+
+// Use routing and CORS before other middleware
+app.UseRouting();
+app.UseCors();
 
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
-
-app.UseHttpsRedirection();
+else 
+{
+    app.UseHttpsRedirection();
+}
 
 app.UseAuthentication();
 app.UseAuthorization();

@@ -7,7 +7,7 @@ namespace ComplainatorAPI.Middleware
         public static IApplicationBuilder UseGlobalExceptionHandling(
             this IApplicationBuilder builder)
         {
-            return builder.UseMiddleware<GlobalExceptionHandlingMiddleware>();
+            return builder.UseMiddleware<CustomExceptionHandlingMiddleware>();
         }
 
         public static IApplicationBuilder UseRequestLogging(
