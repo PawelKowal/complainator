@@ -55,4 +55,58 @@ public class RetrospectiveService : IRetrospectiveService
             throw;
         }
     }
+
+    public async Task<RetrospectiveListResponse> GetListAsync(Guid userId, RetrospectiveListRequest request)
+    {
+        try
+        {
+            // Create base query for user's retrospectives
+            var query = _dbContext.Retrospectives
+                .Include(r => r.Suggestions.Where(s => s.Status == SuggestionStatus.Accepted))
+                .Where(r => r.UserId == userId)
+                .AsNoTracking();
+
+            // Apply sorting
+            query = request.Sort switch
+            {
+                SortOrder.DateDesc => query.OrderByDescending(r => r.Date),
+                SortOrder.DateAsc => query.OrderBy(r => r.Date),
+                _ => query.OrderByDescending(r => r.Date) // Default to DateDesc
+            };
+
+            // Get total count
+            var total = await query.CountAsync();
+
+            // Apply pagination
+            var items = await query
+                .Skip((request.Page - 1) * request.PerPage)
+                .Take(request.PerPage)
+                .Select(r => new RetrospectiveListItem
+                {
+                    Id = r.Id,
+                    Name = r.Name,
+                    Date = r.Date,
+                    AcceptedSuggestions = r.Suggestions.Select(s => new SuggestionListItem
+                    {
+                        Id = s.Id,
+                        SuggestionText = s.SuggestionText
+                    }).ToList()
+                })
+                .ToListAsync();
+
+            // Return response
+            return new RetrospectiveListResponse
+            {
+                Items = items,
+                Total = total,
+                Page = request.Page,
+                PerPage = request.PerPage
+            };
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error fetching retrospectives for user {UserId}", userId);
+            throw;
+        }
+    }
 } 

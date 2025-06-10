@@ -1,14 +1,19 @@
 using System;
 using System.Text.Json.Serialization;
+using System.ComponentModel.DataAnnotations;
 
 namespace ComplainatorAPI.DTO
 {
     public class RetrospectiveListRequest
     {
+        [Range(1, int.MaxValue, ErrorMessage = "Page must be greater than 0")]
         public int Page { get; set; } = 1;
+
+        [Range(1, int.MaxValue, ErrorMessage = "PerPage must be greater than 0")]
         public int PerPage { get; set; } = 10;
         
         [JsonConverter(typeof(JsonStringEnumConverter))]
+        [EnumDataType(typeof(SortOrder), ErrorMessage = "Invalid sort order")]
         public SortOrder Sort { get; set; } = SortOrder.DateDesc;
     }
 
