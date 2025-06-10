@@ -1,5 +1,6 @@
 using ComplainatorAPI.Domain.Settings;
 using ComplainatorAPI.Services;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace ComplainatorAPI.Extensions
 {
@@ -14,6 +15,7 @@ namespace ComplainatorAPI.Extensions
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IRetrospectiveService, RetrospectiveService>();
             services.AddScoped<IAISuggestionService, MockAISuggestionService>();
+            services.AddScoped<ISuggestionService, SuggestionService>();
 
             return services;
         }

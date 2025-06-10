@@ -67,7 +67,7 @@ public class RetrospectiveService : IRetrospectiveService
         {
             // Create base query for user's retrospectives
             var query = _dbContext.Retrospectives
-                .Include(r => r.Suggestions.Where(s => s.Status == SuggestionStatus.Accepted))
+                .Include(r => r.Suggestions)
                 .Where(r => r.UserId == userId)
                 .AsNoTracking();
 
@@ -91,11 +91,13 @@ public class RetrospectiveService : IRetrospectiveService
                     Id = r.Id,
                     Name = r.Name,
                     Date = r.Date,
-                    AcceptedSuggestions = r.Suggestions.Select(s => new SuggestionListItem
-                    {
-                        Id = s.Id,
-                        SuggestionText = s.SuggestionText
-                    }).ToList()
+                    AcceptedSuggestions = r.Suggestions
+                        .Where(s => s.Status == SuggestionStatus.Accepted)
+                        .Select(s => new SuggestionListItem
+                        {
+                            Id = s.Id,
+                            SuggestionText = s.SuggestionText
+                        }).ToList()
                 })
                 .ToListAsync();
 
@@ -123,7 +125,7 @@ public class RetrospectiveService : IRetrospectiveService
             var retrospective = await _dbContext.Retrospectives
                 .AsNoTracking()
                 .Include(r => r.Notes)
-                .Include(r => r.Suggestions.Where(s => s.Status == SuggestionStatus.Accepted))
+                .Include(r => r.Suggestions)
                 .FirstOrDefaultAsync(r => r.Id == retrospectiveId && r.UserId == userId);
 
             // Return null if not found or not owned by user
@@ -152,11 +154,13 @@ public class RetrospectiveService : IRetrospectiveService
                     Observation = notes.GetValueOrDefault(NoteCategory.Observation, new List<NoteDto>()),
                     Success = notes.GetValueOrDefault(NoteCategory.Success, new List<NoteDto>())
                 },
-                AcceptedSuggestions = retrospective.Suggestions.Select(s => new SuggestionListItem
-                {
-                    Id = s.Id,
-                    SuggestionText = s.SuggestionText
-                }).ToList()
+                AcceptedSuggestions = retrospective.Suggestions
+                    .Where(s => s.Status == SuggestionStatus.Accepted)
+                    .Select(s => new SuggestionListItem
+                    {
+                        Id = s.Id,
+                        SuggestionText = s.SuggestionText
+                    }).ToList()
             };
         }
         catch (Exception ex)
