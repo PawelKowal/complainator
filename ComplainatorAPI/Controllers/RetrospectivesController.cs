@@ -48,11 +48,46 @@ public class RetrospectivesController : ControllerBase
         return CreatedAtAction(nameof(GetById), new { id = response.Id }, response);
     }
 
-    // This action is needed for CreatedAtAction to work
+    /// <summary>
+    /// Gets a retrospective by ID for the authenticated user.
+    /// </summary>
+    /// <param name="id">The ID of the retrospective to retrieve.</param>
+    /// <returns>The retrospective details if found and owned by the user.</returns>
+    /// <response code="200">Returns the retrospective details</response>
+    /// <response code="400">If the ID is not a valid GUID</response>
+    /// <response code="401">If the user is not authenticated</response>
+    /// <response code="404">If the retrospective is not found or not owned by the user</response>
+    /// <response code="500">If there was an internal server error</response>
     [HttpGet("{id}")]
-    public Task<IActionResult> GetById(Guid id)
+    [ProducesResponseType(typeof(RetrospectiveDetailResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> GetById(Guid id)
     {
-        throw new NotImplementedException();
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(userId))
+        {
+            _logger.LogWarning("User ID claim not found in token");
+            return Unauthorized();
+        }
+
+        try
+        {
+            var response = await _retrospectiveService.GetByIdAsync(Guid.Parse(userId), id);
+            if (response == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(response);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error fetching retrospective {RetrospectiveId} for user {UserId}", id, userId);
+            return StatusCode(StatusCodes.Status500InternalServerError, new { message = "An error occurred while fetching the retrospective" });
+        }
     }
 
     /// <summary>

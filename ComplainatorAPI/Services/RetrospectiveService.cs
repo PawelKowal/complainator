@@ -109,4 +109,55 @@ public class RetrospectiveService : IRetrospectiveService
             throw;
         }
     }
+
+    public async Task<RetrospectiveDetailResponse?> GetByIdAsync(Guid userId, Guid retrospectiveId)
+    {
+        try
+        {
+            // Query for the retrospective with its notes and accepted suggestions
+            var retrospective = await _dbContext.Retrospectives
+                .AsNoTracking()
+                .Include(r => r.Notes)
+                .Include(r => r.Suggestions.Where(s => s.Status == SuggestionStatus.Accepted))
+                .FirstOrDefaultAsync(r => r.Id == retrospectiveId && r.UserId == userId);
+
+            // Return null if not found or not owned by user
+            if (retrospective == null)
+            {
+                return null;
+            }
+
+            // Group notes by category
+            var notes = retrospective.Notes.GroupBy(n => n.Category)
+                .ToDictionary(g => g.Key, g => g.Select(n => new NoteDto
+                {
+                    Id = n.Id,
+                    Content = n.Content
+                }).ToList());
+
+            // Map to response DTO
+            return new RetrospectiveDetailResponse
+            {
+                Id = retrospective.Id,
+                Name = retrospective.Name,
+                Date = retrospective.Date,
+                Notes = new RetrospectiveNotes
+                {
+                    ImprovementArea = notes.GetValueOrDefault(NoteCategory.ImprovementArea, new List<NoteDto>()),
+                    Observation = notes.GetValueOrDefault(NoteCategory.Observation, new List<NoteDto>()),
+                    Success = notes.GetValueOrDefault(NoteCategory.Success, new List<NoteDto>())
+                },
+                AcceptedSuggestions = retrospective.Suggestions.Select(s => new SuggestionListItem
+                {
+                    Id = s.Id,
+                    SuggestionText = s.SuggestionText
+                }).ToList()
+            };
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error fetching retrospective {RetrospectiveId} for user {UserId}", retrospectiveId, userId);
+            throw;
+        }
+    }
 } 
