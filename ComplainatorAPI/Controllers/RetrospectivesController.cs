@@ -167,4 +167,44 @@ public class RetrospectivesController : ControllerBase
             return StatusCode(StatusCodes.Status500InternalServerError, new { message = "An error occurred while adding the note" });
         }
     }
+
+    /// <summary>
+    /// Generates AI suggestions for a retrospective based on its notes.
+    /// </summary>
+    /// <param name="id">The ID of the retrospective to generate suggestions for.</param>
+    /// <returns>The generated suggestions.</returns>
+    /// <response code="200">Returns the generated suggestions</response>
+    /// <response code="401">If the user is not authenticated</response>
+    /// <response code="404">If the retrospective is not found or not owned by the user</response>
+    /// <response code="500">If there was an internal server error</response>
+    [HttpPost("{id}/generate-suggestions")]
+    [ProducesResponseType(typeof(GenerateSuggestionsResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> GenerateSuggestions(Guid id)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(userId))
+        {
+            _logger.LogWarning("User ID claim not found in token");
+            return Unauthorized();
+        }
+
+        try
+        {
+            var response = await _retrospectiveService.GenerateSuggestionsAsync(Guid.Parse(userId), id);
+            if (response == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(response);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error generating suggestions for retrospective {RetrospectiveId} for user {UserId}", id, userId);
+            return StatusCode(StatusCodes.Status500InternalServerError, new { message = "An error occurred while generating suggestions" });
+        }
+    }
 } 

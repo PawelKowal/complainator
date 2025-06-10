@@ -35,4 +35,12 @@ public interface IRetrospectiveService
     /// <param name="request">The note data to add.</param>
     /// <returns>The created note data if successful, null if retrospective not found or not owned by user.</returns>
     Task<CreateNoteResponse?> AddNoteAsync(Guid userId, Guid retrospectiveId, CreateNoteRequest request);
+
+    /// <summary>
+    /// Generates AI suggestions for a retrospective based on its notes.
+    /// </summary>
+    /// <param name="userId">The ID of the user requesting suggestions.</param>
+    /// <param name="retrospectiveId">The ID of the retrospective to generate suggestions for.</param>
+    /// <returns>The generated suggestions if successful, null if retrospective not found or not owned by user.</returns>
+    Task<GenerateSuggestionsResponse?> GenerateSuggestionsAsync(Guid userId, Guid retrospectiveId);
 } 

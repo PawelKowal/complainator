@@ -13,6 +13,7 @@ namespace ComplainatorAPI.Extensions
             // Register services
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IRetrospectiveService, RetrospectiveService>();
+            services.AddScoped<IAISuggestionService, MockAISuggestionService>();
 
             return services;
         }

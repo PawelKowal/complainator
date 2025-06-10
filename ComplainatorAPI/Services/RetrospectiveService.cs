@@ -10,11 +10,16 @@ public class RetrospectiveService : IRetrospectiveService
 {
     private readonly ApplicationDbContext _dbContext;
     private readonly ILogger<RetrospectiveService> _logger;
+    private readonly IAISuggestionService _aiService;
 
-    public RetrospectiveService(ApplicationDbContext dbContext, ILogger<RetrospectiveService> logger)
+    public RetrospectiveService(
+        ApplicationDbContext dbContext,
+        ILogger<RetrospectiveService> logger,
+        IAISuggestionService aiService)
     {
         _dbContext = dbContext;
         _logger = logger;
+        _aiService = aiService;
     }
 
     public async Task<CreateRetrospectiveResponse> CreateAsync(Guid userId)
@@ -206,6 +211,74 @@ public class RetrospectiveService : IRetrospectiveService
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error adding note to retrospective {RetrospectiveId} for user {UserId}", retrospectiveId, userId);
+            throw;
+        }
+    }
+
+    public async Task<GenerateSuggestionsResponse?> GenerateSuggestionsAsync(Guid userId, Guid retrospectiveId)
+    {
+        try
+        {
+            _logger.LogInformation("Generating suggestions for retrospective {RetrospectiveId} for user {UserId}", retrospectiveId, userId);
+
+            // Query for the retrospective with its notes and pending suggestions
+            var retrospective = await _dbContext.Retrospectives
+                .AsNoTracking()
+                .Include(r => r.Notes)
+                .Include(r => r.Suggestions.Where(s => s.Status == SuggestionStatus.Pending))
+                .FirstOrDefaultAsync(r => r.Id == retrospectiveId && r.UserId == userId);
+
+            // Return null if not found or not owned by user
+            if (retrospective == null)
+            {
+                _logger.LogWarning("Retrospective {RetrospectiveId} not found or not owned by user {UserId}", retrospectiveId, userId);
+                return null;
+            }
+
+            // Check for existing pending suggestions (idempotency)
+            if (retrospective.Suggestions.Any())
+            {
+                _logger.LogInformation("Returning existing pending suggestions for retrospective {RetrospectiveId}", retrospectiveId);
+                return new GenerateSuggestionsResponse
+                {
+                    Suggestions = retrospective.Suggestions.Select(s => new SuggestionDto
+                    {
+                        Id = s.Id,
+                        SuggestionText = s.SuggestionText
+                    }).ToList()
+                };
+            }
+
+            // Generate new suggestions using AI service
+            var suggestionTexts = await _aiService.GenerateAsync(retrospective.Notes);
+
+            // Create new suggestion entities
+            var suggestions = suggestionTexts.Select(text => new Suggestion
+            {
+                Id = Guid.NewGuid(),
+                RetrospectiveId = retrospectiveId,
+                SuggestionText = text,
+                Status = SuggestionStatus.Pending,
+                CreatedAt = DateTime.UtcNow
+            }).ToList();
+
+            // Save new suggestions to database
+            await _dbContext.Suggestions.AddRangeAsync(suggestions);
+            await _dbContext.SaveChangesAsync();
+
+            // Map to response DTO
+            return new GenerateSuggestionsResponse
+            {
+                Suggestions = suggestions.Select(s => new SuggestionDto
+                {
+                    Id = s.Id,
+                    SuggestionText = s.SuggestionText
+                }).ToList()
+            };
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error generating suggestions for retrospective {RetrospectiveId} for user {UserId}", retrospectiveId, userId);
             throw;
         }
     }
