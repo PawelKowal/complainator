@@ -124,4 +124,47 @@ public class RetrospectivesController : ControllerBase
             return StatusCode(StatusCodes.Status500InternalServerError, new { message = "An error occurred while fetching retrospectives" });
         }
     }
+
+    /// <summary>
+    /// Adds a new note to a retrospective.
+    /// </summary>
+    /// <param name="id">The ID of the retrospective to add the note to.</param>
+    /// <param name="request">The note data to add.</param>
+    /// <returns>The created note data.</returns>
+    /// <response code="201">Returns the newly created note</response>
+    /// <response code="400">If the request data is invalid</response>
+    /// <response code="401">If the user is not authenticated</response>
+    /// <response code="404">If the retrospective is not found or not owned by the user</response>
+    /// <response code="500">If there was an internal server error</response>
+    [HttpPost("{id}/notes")]
+    [ProducesResponseType(typeof(CreateNoteResponse), StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> AddNote(Guid id, [FromBody] CreateNoteRequest request)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(userId))
+        {
+            _logger.LogWarning("User ID claim not found in token");
+            return Unauthorized();
+        }
+
+        try
+        {
+            var response = await _retrospectiveService.AddNoteAsync(Guid.Parse(userId), id, request);
+            if (response == null)
+            {
+                return NotFound();
+            }
+
+            return CreatedAtAction(nameof(GetById), new { id }, response);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error adding note to retrospective {RetrospectiveId} for user {UserId}", id, userId);
+            return StatusCode(StatusCodes.Status500InternalServerError, new { message = "An error occurred while adding the note" });
+        }
+    }
 } 

@@ -160,4 +160,53 @@ public class RetrospectiveService : IRetrospectiveService
             throw;
         }
     }
+
+    public async Task<CreateNoteResponse?> AddNoteAsync(Guid userId, Guid retrospectiveId, CreateNoteRequest request)
+    {
+        try
+        {
+            _logger.LogInformation("Adding note to retrospective {RetrospectiveId} for user {UserId}", retrospectiveId, userId);
+
+            // Query for the retrospective to verify ownership
+            var retrospective = await _dbContext.Retrospectives
+                .FirstOrDefaultAsync(r => r.Id == retrospectiveId && r.UserId == userId);
+
+            // Return null if not found or not owned by user
+            if (retrospective == null)
+            {
+                _logger.LogWarning("Retrospective {RetrospectiveId} not found or not owned by user {UserId}", retrospectiveId, userId);
+                return null;
+            }
+
+            // Create new note entity
+            var note = new Note
+            {
+                Id = Guid.NewGuid(),
+                RetrospectiveId = retrospectiveId,
+                Category = request.Category,
+                Content = request.Content,
+                CreatedAt = DateTime.UtcNow
+            };
+
+            // Add note to database
+            await _dbContext.Notes.AddAsync(note);
+
+            // Save changes
+            await _dbContext.SaveChangesAsync();
+
+            // Map to response DTO
+            return new CreateNoteResponse
+            {
+                Id = note.Id,
+                Category = note.Category,
+                Content = note.Content,
+                CreatedAt = note.CreatedAt
+            };
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error adding note to retrospective {RetrospectiveId} for user {UserId}", retrospectiveId, userId);
+            throw;
+        }
+    }
 } 
