@@ -31,3 +31,5 @@ dist-ssr
 *.db-journal
 ComplainatorAPI/Complainator.db-shm
 ComplainatorAPI/Complainator.db-wal
+
+.env
