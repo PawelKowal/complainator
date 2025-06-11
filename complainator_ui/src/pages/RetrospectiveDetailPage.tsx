@@ -87,13 +87,24 @@ export const RetrospectiveDetailPage: FC = () => {
                 category="improvementArea"
                 notes={data.notes.improvementArea}
                 onAddClick={handleAddNoteClick}
+                hasSuggestions={data.suggestions?.length > 0}
               />
             </Box>
             <Box>
-              <NoteColumn category="observation" notes={data.notes.observation} onAddClick={handleAddNoteClick} />
+              <NoteColumn
+                category="observation"
+                notes={data.notes.observation}
+                onAddClick={handleAddNoteClick}
+                hasSuggestions={data.suggestions?.length > 0}
+              />
             </Box>
             <Box>
-              <NoteColumn category="success" notes={data.notes.success} onAddClick={handleAddNoteClick} />
+              <NoteColumn
+                category="success"
+                notes={data.notes.success}
+                onAddClick={handleAddNoteClick}
+                hasSuggestions={data.suggestions?.length > 0}
+              />
             </Box>
           </Box>
 

@@ -8,10 +8,10 @@ interface NoteColumnProps {
   category: NoteCategory;
   notes: NoteDto[];
   onAddClick: (category: NoteCategory) => void;
-  isGeneratingSuggestions?: boolean;
+  hasSuggestions?: boolean;
 }
 
-export const NoteColumn: FC<NoteColumnProps> = ({ category, notes, onAddClick, isGeneratingSuggestions = false }) => {
+export const NoteColumn: FC<NoteColumnProps> = ({ category, notes, onAddClick, hasSuggestions = false }) => {
   return (
     <Box
       sx={{
@@ -50,7 +50,7 @@ export const NoteColumn: FC<NoteColumnProps> = ({ category, notes, onAddClick, i
         variant="outlined"
         startIcon={<AddIcon />}
         onClick={() => onAddClick(category)}
-        disabled={isGeneratingSuggestions}
+        disabled={hasSuggestions}
         fullWidth
         sx={{ py: 1 }}
       >
