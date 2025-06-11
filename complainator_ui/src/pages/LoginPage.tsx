@@ -4,11 +4,11 @@ import { useNavigate, Link as RouterLink } from "react-router";
 import { useMutation } from "@tanstack/react-query";
 import { Alert, Box, Button, TextField, Typography, Link } from "@mui/material";
 import type { AxiosError } from "axios";
-import type { RegisterRequest, RegisterResponse } from "../dto/AuthDto";
+import type { LoginRequest, LoginResponse } from "../dto/AuthDto";
 import { useAuth } from "../contexts/AuthContext";
 import axiosInstance from "../api/axios";
 
-interface RegisterFormState {
+interface LoginFormState {
   email: string;
   password: string;
   errors: {
@@ -18,16 +18,16 @@ interface RegisterFormState {
   };
 }
 
-const initialState: RegisterFormState = {
+const initialState: LoginFormState = {
   email: "",
   password: "",
   errors: {},
 };
 
-export const RegisterPage: FC = () => {
+export const LoginPage: FC = () => {
   const navigate = useNavigate();
   const { setUser } = useAuth();
-  const [formState, setFormState] = useState<RegisterFormState>(initialState);
+  const [formState, setFormState] = useState<LoginFormState>(initialState);
 
   const validateEmail = useCallback((email: string): string | undefined => {
     if (!email) return "Email jest wymagany";
@@ -38,10 +38,6 @@ export const RegisterPage: FC = () => {
 
   const validatePassword = useCallback((password: string): string | undefined => {
     if (!password) return "Hasło jest wymagane";
-    if (password.length < 8) return "Hasło musi mieć minimum 8 znaków";
-    if (!/[A-Z]/.test(password)) return "Hasło musi zawierać przynajmniej jedną dużą literę";
-    if (!/[0-9]/.test(password)) return "Hasło musi zawierać przynajmniej jedną cyfrę";
-    if (!/[^A-Za-z0-9]/.test(password)) return "Hasło musi zawierać przynajmniej jeden znak specjalny";
     return undefined;
   }, []);
 
@@ -49,9 +45,9 @@ export const RegisterPage: FC = () => {
     return !validateEmail(formState.email) && !validatePassword(formState.password);
   }, [formState.email, formState.password, validateEmail, validatePassword]);
 
-  const registerMutation = useMutation<RegisterResponse, AxiosError<{ message: string }>, RegisterRequest>({
+  const loginMutation = useMutation<LoginResponse, AxiosError<{ message: string }>, LoginRequest>({
     mutationFn: async (data) => {
-      const response = await axiosInstance.post<RegisterResponse>("/auth/register", data);
+      const response = await axiosInstance.post<LoginResponse>("/auth/login", data);
       return response.data;
     },
     onSuccess: (data) => {
@@ -64,7 +60,7 @@ export const RegisterPage: FC = () => {
         ...prev,
         errors: {
           ...prev.errors,
-          submit: error.response?.data?.message || "Wystąpił błąd",
+          submit: error.response?.data?.message || "Nieprawidłowy email lub hasło",
         },
       }));
     },
@@ -97,7 +93,7 @@ export const RegisterPage: FC = () => {
       return;
     }
 
-    registerMutation.mutate({
+    loginMutation.mutate({
       email: formState.email,
       password: formState.password,
     });
@@ -106,7 +102,7 @@ export const RegisterPage: FC = () => {
   return (
     <Box component="form" onSubmit={handleSubmit} sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
       <Typography variant="h5" align="center">
-        Rejestracja
+        Logowanie
       </Typography>
 
       {formState.errors.submit && <Alert severity="error">{formState.errors.submit}</Alert>}
@@ -132,22 +128,22 @@ export const RegisterPage: FC = () => {
         label="Hasło"
         type="password"
         id="password"
-        autoComplete="new-password"
+        autoComplete="current-password"
         value={formState.password}
         onChange={handlePasswordChange}
         error={!!formState.errors.password}
         helperText={formState.errors.password}
       />
 
-      <Button type="submit" fullWidth variant="contained" disabled={registerMutation.isPending || !isFormValid()}>
-        {registerMutation.isPending ? "Rejestracja..." : "Zarejestruj się"}
+      <Button type="submit" fullWidth variant="contained" disabled={loginMutation.isPending || !isFormValid()}>
+        {loginMutation.isPending ? "Logowanie..." : "Zaloguj się"}
       </Button>
 
       <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
         <Typography variant="body2">
-          Masz już konto?{" "}
-          <Link component={RouterLink} to="/login" sx={{ textDecoration: "none" }}>
-            Zaloguj się
+          Nie masz jeszcze konta?{" "}
+          <Link component={RouterLink} to="/register" sx={{ textDecoration: "none" }}>
+            Zarejestruj się
           </Link>
         </Typography>
       </Box>
