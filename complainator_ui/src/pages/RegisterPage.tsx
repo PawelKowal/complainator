@@ -1,12 +1,8 @@
 import type { FC } from "react";
 import { useState, useCallback } from "react";
-import { useNavigate, Link as RouterLink } from "react-router";
-import { useMutation } from "@tanstack/react-query";
+import { Link as RouterLink } from "react-router";
 import { Alert, Box, Button, TextField, Typography, Link } from "@mui/material";
-import type { AxiosError } from "axios";
-import type { RegisterRequest, RegisterResponse } from "../dto/AuthDto";
-import { useAuth } from "../contexts/AuthContext";
-import axiosInstance from "../api/axios";
+import { useRegister } from "../hooks/useRegister";
 
 interface RegisterFormState {
   email: string;
@@ -25,9 +21,8 @@ const initialState: RegisterFormState = {
 };
 
 export const RegisterPage: FC = () => {
-  const navigate = useNavigate();
-  const { setUser } = useAuth();
   const [formState, setFormState] = useState<RegisterFormState>(initialState);
+  const registerMutation = useRegister();
 
   const validateEmail = useCallback((email: string): string | undefined => {
     if (!email) return "Email jest wymagany";
@@ -48,27 +43,6 @@ export const RegisterPage: FC = () => {
   const isFormValid = useCallback((): boolean => {
     return !validateEmail(formState.email) && !validatePassword(formState.password);
   }, [formState.email, formState.password, validateEmail, validatePassword]);
-
-  const registerMutation = useMutation<RegisterResponse, AxiosError<{ message: string }>, RegisterRequest>({
-    mutationFn: async (data) => {
-      const response = await axiosInstance.post<RegisterResponse>("/auth/register", data);
-      return response.data;
-    },
-    onSuccess: (data) => {
-      localStorage.setItem("token", data.token);
-      setUser(data.user);
-      navigate("/dashboard");
-    },
-    onError: (error) => {
-      setFormState((prev) => ({
-        ...prev,
-        errors: {
-          ...prev.errors,
-          submit: error.response?.data?.message || "Wystąpił błąd",
-        },
-      }));
-    },
-  });
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const email = e.target.value;
@@ -97,10 +71,23 @@ export const RegisterPage: FC = () => {
       return;
     }
 
-    registerMutation.mutate({
-      email: formState.email,
-      password: formState.password,
-    });
+    registerMutation.mutate(
+      {
+        email: formState.email,
+        password: formState.password,
+      },
+      {
+        onError: (error) => {
+          setFormState((prev) => ({
+            ...prev,
+            errors: {
+              ...prev.errors,
+              submit: error.response?.data?.message || "Wystąpił błąd",
+            },
+          }));
+        },
+      }
+    );
   };
 
   return (

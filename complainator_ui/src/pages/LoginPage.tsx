@@ -1,12 +1,8 @@
 import type { FC } from "react";
 import { useState, useCallback } from "react";
-import { useNavigate, Link as RouterLink } from "react-router";
-import { useMutation } from "@tanstack/react-query";
+import { Link as RouterLink } from "react-router";
 import { Alert, Box, Button, TextField, Typography, Link } from "@mui/material";
-import type { AxiosError } from "axios";
-import type { LoginRequest, LoginResponse } from "../dto/AuthDto";
-import { useAuth } from "../contexts/AuthContext";
-import axiosInstance from "../api/axios";
+import { useLogin } from "../hooks/useLogin";
 
 interface LoginFormState {
   email: string;
@@ -25,9 +21,8 @@ const initialState: LoginFormState = {
 };
 
 export const LoginPage: FC = () => {
-  const navigate = useNavigate();
-  const { setUser } = useAuth();
   const [formState, setFormState] = useState<LoginFormState>(initialState);
+  const loginMutation = useLogin();
 
   const validateEmail = useCallback((email: string): string | undefined => {
     if (!email) return "Email jest wymagany";
@@ -44,27 +39,6 @@ export const LoginPage: FC = () => {
   const isFormValid = useCallback((): boolean => {
     return !validateEmail(formState.email) && !validatePassword(formState.password);
   }, [formState.email, formState.password, validateEmail, validatePassword]);
-
-  const loginMutation = useMutation<LoginResponse, AxiosError<{ message: string }>, LoginRequest>({
-    mutationFn: async (data) => {
-      const response = await axiosInstance.post<LoginResponse>("/auth/login", data);
-      return response.data;
-    },
-    onSuccess: (data) => {
-      localStorage.setItem("token", data.token);
-      setUser(data.user);
-      navigate("/dashboard");
-    },
-    onError: (error) => {
-      setFormState((prev) => ({
-        ...prev,
-        errors: {
-          ...prev.errors,
-          submit: error.response?.data?.message || "Nieprawidłowy email lub hasło",
-        },
-      }));
-    },
-  });
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const email = e.target.value;
@@ -93,10 +67,23 @@ export const LoginPage: FC = () => {
       return;
     }
 
-    loginMutation.mutate({
-      email: formState.email,
-      password: formState.password,
-    });
+    loginMutation.mutate(
+      {
+        email: formState.email,
+        password: formState.password,
+      },
+      {
+        onError: (error) => {
+          setFormState((prev) => ({
+            ...prev,
+            errors: {
+              ...prev.errors,
+              submit: error.response?.data?.message || "Nieprawidłowy email lub hasło",
+            },
+          }));
+        },
+      }
+    );
   };
 
   return (
