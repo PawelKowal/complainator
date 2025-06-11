@@ -1,6 +1,6 @@
 import { BrowserRouter } from "react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Container, CssBaseline, ThemeProvider, createTheme } from "@mui/material";
+import { Box, CssBaseline, ThemeProvider, createTheme } from "@mui/material";
 import { AppRoutes } from "./routes/AppRoutes";
 import { AuthProvider } from "./contexts/AuthContext";
 
@@ -22,18 +22,16 @@ function App() {
         <AuthProvider>
           <ThemeProvider theme={theme}>
             <CssBaseline />
-            <Container
-              maxWidth="xs"
+            <Box
               sx={{
                 width: "100%",
                 minHeight: "100vh",
                 display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
+                flexDirection: "column",
               }}
             >
               <AppRoutes />
-            </Container>
+            </Box>
           </ThemeProvider>
         </AuthProvider>
       </BrowserRouter>

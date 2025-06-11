@@ -1,6 +1,7 @@
 using System;
 using System.Text.Json.Serialization;
 using System.ComponentModel.DataAnnotations;
+using ComplainatorAPI.Domain.Entities;
 
 namespace ComplainatorAPI.DTO
 {
@@ -36,13 +37,7 @@ namespace ComplainatorAPI.DTO
         public Guid Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public DateTime Date { get; set; }
-        public List<SuggestionListItem> AcceptedSuggestions { get; set; } = new();
-    }
-
-    public class SuggestionListItem
-    {
-        public Guid Id { get; set; }
-        public string SuggestionText { get; set; } = string.Empty;
+        public List<SuggestionDto> Suggestions { get; set; } = new();
     }
 
     public class CreateRetrospectiveResponse
@@ -58,7 +53,7 @@ namespace ComplainatorAPI.DTO
         public string Name { get; set; } = string.Empty;
         public DateTime Date { get; set; }
         public RetrospectiveNotes Notes { get; set; } = new();
-        public List<SuggestionListItem> AcceptedSuggestions { get; set; } = new();
+        public List<SuggestionDto> Suggestions { get; set; } = new();
     }
 
     public class RetrospectiveNotes

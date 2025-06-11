@@ -1,5 +1,5 @@
 import type { NoteDto } from "./NoteDto";
-import type { SuggestionListItem } from "./SuggestionDto";
+import type { SuggestionDto } from "./SuggestionDto";
 
 export type SortOrder = "dateDesc" | "dateAsc";
 
@@ -20,15 +20,13 @@ export interface RetrospectiveListItem {
   id: string; // Guid -> string
   name: string;
   date: string; // DateTime -> string (ISO 8601)
-  acceptedSuggestions: SuggestionListItem[];
+  acceptedSuggestions: SuggestionDto[];
 }
 
 export interface CreateRetrospectiveResponse {
   id: string; // Guid -> string
   name: string;
   date: string; // DateTime -> string (ISO 8601)
-  acceptedCount: number;
-  rejectedCount: number;
 }
 
 export interface RetrospectiveDetailResponse {
@@ -36,7 +34,7 @@ export interface RetrospectiveDetailResponse {
   name: string;
   date: string; // DateTime -> string (ISO 8601)
   notes: RetrospectiveNotes;
-  acceptedSuggestions: SuggestionListItem[];
+  suggestions: SuggestionDto[];
 }
 
 export interface RetrospectiveNotes {

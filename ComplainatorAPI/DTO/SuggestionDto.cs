@@ -14,6 +14,8 @@ namespace ComplainatorAPI.DTO
     {
         public Guid Id { get; set; }
         public string SuggestionText { get; set; } = string.Empty;
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        public SuggestionStatus Status { get; set; }
     }
 
     public class UpdateSuggestionRequest

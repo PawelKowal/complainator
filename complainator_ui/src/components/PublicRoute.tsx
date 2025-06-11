@@ -1,6 +1,7 @@
 import type { FC, PropsWithChildren } from "react";
 import { Navigate, useLocation } from "react-router";
 import { useAuth } from "../contexts/AuthContext";
+import { PublicLayout } from "./PublicLayout";
 
 export const PublicRoute: FC<PropsWithChildren> = ({ children }) => {
   const { isAuthenticated } = useAuth();
@@ -12,5 +13,5 @@ export const PublicRoute: FC<PropsWithChildren> = ({ children }) => {
     return <Navigate to={from} replace />;
   }
 
-  return <>{children}</>;
+  return <PublicLayout>{children}</PublicLayout>;
 };

@@ -38,7 +38,7 @@ export const RetrospectiveCard: FC<RetrospectiveCardProps> = ({ item }) => {
           <Typography variant="subtitle2" color="text.secondary">
             {formattedDate}
           </Typography>
-          {item.acceptedSuggestions.length > 0 && (
+          {item.acceptedSuggestions?.length > 0 && (
             <List dense sx={{ mt: 1 }}>
               {item.acceptedSuggestions.map((suggestion) => (
                 <ListItem key={suggestion.id}>

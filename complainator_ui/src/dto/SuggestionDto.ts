@@ -1,4 +1,4 @@
-export type SuggestionStatus = "pending" | "accepted" | "rejected";
+export type SuggestionStatus = "Pending" | "Accepted" | "Rejected";
 
 export interface GenerateSuggestionsResponse {
   suggestions: SuggestionDto[];
@@ -7,11 +7,7 @@ export interface GenerateSuggestionsResponse {
 export interface SuggestionDto {
   id: string; // Guid -> string
   suggestionText: string;
-}
-
-export interface SuggestionListItem {
-  id: string; // Guid -> string
-  suggestionText: string;
+  status: SuggestionStatus;
 }
 
 export interface UpdateSuggestionRequest {

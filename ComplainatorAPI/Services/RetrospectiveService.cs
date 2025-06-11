@@ -91,9 +91,9 @@ public class RetrospectiveService : IRetrospectiveService
                     Id = r.Id,
                     Name = r.Name,
                     Date = r.Date,
-                    AcceptedSuggestions = r.Suggestions
+                    Suggestions = r.Suggestions
                         .Where(s => s.Status == SuggestionStatus.Accepted)
-                        .Select(s => new SuggestionListItem
+                        .Select(s => new SuggestionDto
                         {
                             Id = s.Id,
                             SuggestionText = s.SuggestionText
@@ -121,7 +121,7 @@ public class RetrospectiveService : IRetrospectiveService
     {
         try
         {
-            // Query for the retrospective with its notes and accepted suggestions
+            // Query for the retrospective with its notes and all suggestions
             var retrospective = await _dbContext.Retrospectives
                 .AsNoTracking()
                 .Include(r => r.Notes)
@@ -154,12 +154,12 @@ public class RetrospectiveService : IRetrospectiveService
                     Observation = notes.GetValueOrDefault(NoteCategory.Observation, new List<NoteDto>()),
                     Success = notes.GetValueOrDefault(NoteCategory.Success, new List<NoteDto>())
                 },
-                AcceptedSuggestions = retrospective.Suggestions
-                    .Where(s => s.Status == SuggestionStatus.Accepted)
-                    .Select(s => new SuggestionListItem
+                Suggestions = retrospective.Suggestions
+                    .Select(s => new SuggestionDto
                     {
                         Id = s.Id,
-                        SuggestionText = s.SuggestionText
+                        SuggestionText = s.SuggestionText,
+                        Status = s.Status
                     }).ToList()
             };
         }
