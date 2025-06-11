@@ -1,28 +1,35 @@
 import type { FC } from "react";
-import { useNavigate } from "react-router";
-import { Box, Button, Typography } from "@mui/material";
-import { useAuth } from "../contexts/AuthContext";
+import { useState } from "react";
+import { Box } from "@mui/material";
+import { Header } from "../components/Header";
+import { InfiniteScrollList } from "../components/InfiniteScrollList";
+import { ErrorAlert } from "../components/ErrorAlert";
+import { useRetrospectives } from "../hooks/useRetrospectives";
 
 export const DashboardPage: FC = () => {
-  const navigate = useNavigate();
-  const { setUser } = useAuth();
+  const [errorMessage, setErrorMessage] = useState<string | undefined>();
+  const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage, error } = useRetrospectives();
 
-  const handleLogout = () => {
-    // Wyczyść token i dane użytkownika
-    localStorage.removeItem("token");
-    setUser(null);
-    navigate("/login");
-  };
+  // Show error alert when query fails
+  if (error) {
+    setErrorMessage("Nie udało się pobrać listy retrospektyw");
+  }
+
+  const allItems = data?.pages.flatMap((page) => page.items) ?? [];
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", gap: 3, alignItems: "center" }}>
-      <Typography variant="h4" component="h1">
-        Dashboard
-      </Typography>
-
-      <Button variant="contained" color="error" onClick={handleLogout} sx={{ mt: 2 }}>
-        Wyloguj się
-      </Button>
+    <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
+      <Header />
+      <Box component="main" sx={{ flex: 1, p: 3 }}>
+        <InfiniteScrollList
+          items={allItems}
+          isLoading={isLoading}
+          isFetchingNextPage={isFetchingNextPage}
+          hasNextPage={hasNextPage}
+          fetchNextPage={fetchNextPage}
+        />
+      </Box>
+      <ErrorAlert open={!!errorMessage} message={errorMessage} onClose={() => setErrorMessage(undefined)} />
     </Box>
   );
 };

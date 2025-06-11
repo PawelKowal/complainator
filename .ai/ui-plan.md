@@ -36,8 +36,8 @@ Layout desktop-first (minWidth 1024px), style: MUI (`sx` prop).
 - Ścieżka: `/` lub `/dashboard`
 - Cel: prezentacja listy retrospektyw z infinite scroll.
 - Kluczowe informacje: nazwa retrospektywy, data, teksty zaakceptowanych sugestii.
-- Komponenty: `InfiniteScrollList`, `Button` "Nowa retrospektywa", `Skeleton`, `Alert`, placeholder "Brak retrospektyw do wyświetlenia".
-- UX: przycisk "Nowa retrospektywa" disabled podczas mutacji, czytelny układ listy.
+- Komponenty: `InfiniteScrollList`, `Button` "Nowa retrospektywa", `Button` "Wyloguj się", `Skeleton`, `Alert`, placeholder "Brak retrospektyw do wyświetlenia".
+- UX: przycisk "Nowa retrospektywa" disabled podczas mutacji, czytelny układ listy, przycisk "Wyloguj się" wyczyści dane aktualnego użytkownika i token JWT oraz przekieruje na `/login`.
 - Mapowanie user stories: US-004, US-005, US-012, US-013
 
 ### RetrospectiveDetailPage
@@ -70,20 +70,21 @@ Layout desktop-first (minWidth 1024px), style: MUI (`sx` prop).
    - Klik "Generuj wnioski" -> `POST /retrospectives/{id}/generate-suggestions` -> wyświetlenie sugestii.
    - Akceptacja/odrzucenie -> `PATCH /suggestions/{id}` -> refetch szczegółów.
    - Powrót do dashboard przez header lub breadcrumb.
+5. Kliknięcie przycisku "Wyloguj się" wyczyści dane aktualnego użytkownika i token JWT oraz przekieruje na `/login`.
 
 ## 4. Układ i struktura nawigacji
 
 - `PublicLayout` (ścieżki: `/login`, `/register`):
   - `Container`, `Outlet`.
 - `PrivateLayout` (ścieżki: `/`, `/dashboard`, `/retrospectives/:id`):
-  - `AppBar` z tytułem i `Button` "Nowa retrospektywa".
+  - `AppBar` z tytułem oraz przyciskami `Button` "Nowa retrospektywa" i `Button` "Wyloguj się".
   - Globalny `ErrorAlert`.
   - `Container`, `Outlet`.
 - `PrivateRoute`: sprawdzenie JWT, redirect na `/login` jeśli brak.
 
 ## 5. Kluczowe komponenty
 
-- **Header**: `AppBar` z przyciskiem "Nowa retrospektywa".
+- **Header**: `AppBar` z przyciskami "Nowa retrospektywa" i "Wyloguj się".
 - **InfiniteScrollList**: wrapper do `useInfiniteQuery`.
 - **NoteColumn**: nagłówek kolumny, lista notatek.
 - **AddNoteDialog**: modal z select kategorii i `TextField`.
