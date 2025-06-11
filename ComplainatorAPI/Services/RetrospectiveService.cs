@@ -91,7 +91,7 @@ public class RetrospectiveService : IRetrospectiveService
                     Id = r.Id,
                     Name = r.Name,
                     Date = r.Date,
-                    Suggestions = r.Suggestions
+                    AcceptedSuggestions = r.Suggestions
                         .Where(s => s.Status == SuggestionStatus.Accepted)
                         .Select(s => new SuggestionDto
                         {

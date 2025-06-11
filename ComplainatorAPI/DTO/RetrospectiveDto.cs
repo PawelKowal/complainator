@@ -37,7 +37,7 @@ namespace ComplainatorAPI.DTO
         public Guid Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public DateTime Date { get; set; }
-        public List<SuggestionDto> Suggestions { get; set; } = new();
+        public List<SuggestionDto> AcceptedSuggestions { get; set; } = new();
     }
 
     public class CreateRetrospectiveResponse
