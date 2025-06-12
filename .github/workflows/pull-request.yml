@@ -13,6 +13,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      # Debug step
+      - name: Debug - List directory structure
+        run: |
+          pwd
+          ls -la
+          ls -la ./complainator_backend/
+
       # Frontend linting
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -36,7 +43,8 @@ jobs:
           dotnet-version: "9.0.x"
 
       - name: Lint backend
-        run: dotnet format --verify-no-changes ./complainator_backend/Complainator.sln
+        working-directory: complainator_backend
+        run: dotnet format --verify-no-changes Complainator.sln
 
   unit-tests:
     name: Run Unit Tests
