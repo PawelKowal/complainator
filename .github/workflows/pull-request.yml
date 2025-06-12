@@ -48,9 +48,13 @@ jobs:
         with:
           dotnet-version: "9.0.x"
 
+      - name: Restore backend dependencies
+        working-directory: complainator_backend
+        run: dotnet restore
+
       - name: Lint backend
-        working-directory: complainator_backend/ComplainatorAPI
-        run: dotnet format --verify-no-changes
+        working-directory: complainator_backend
+        run: dotnet format --verify-no-changes Complainator.sln
 
   unit-tests:
     name: Run Unit Tests
@@ -66,6 +70,10 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: "9.0.x"
+
+      - name: Restore backend dependencies
+        working-directory: complainator_backend
+        run: dotnet restore
 
       - name: Run backend tests with coverage
         working-directory: complainator_backend
