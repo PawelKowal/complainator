@@ -9,9 +9,9 @@ public class OpenRouterServerException : OpenRouterException
         StatusCode = statusCode;
     }
 
-    public OpenRouterServerException(string message, int statusCode, Exception innerException) 
+    public OpenRouterServerException(string message, int statusCode, Exception innerException)
         : base(message, innerException)
     {
         StatusCode = statusCode;
     }
-} 
+}

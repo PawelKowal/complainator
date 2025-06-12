@@ -68,4 +68,4 @@ namespace ComplainatorAPI.Middleware
             return app.UseMiddleware<CustomExceptionHandlingMiddleware>();
         }
     }
-} 
+}

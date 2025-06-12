@@ -17,7 +17,7 @@
 Complainator is a web application designed to streamline the creation of sprint retrospectives and generate actionable insights using AI.  
 Users can:
 
-- Automatically create retrospectives named `Retrospektywa #{number} – DD.MM.YYYY`.
+- Automatically create retrospectives named: `Retrospektywa #{number} – DD.MM.YYYY`.
 - Add notes in three categories:
   - **What needs improvement**
   - **Observations**

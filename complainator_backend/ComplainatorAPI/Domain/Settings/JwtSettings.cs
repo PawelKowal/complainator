@@ -7,4 +7,4 @@ namespace ComplainatorAPI.Domain.Settings
         public string Audience { get; set; } = string.Empty;
         public int DurationInMinutes { get; set; }
     }
-} 
+}

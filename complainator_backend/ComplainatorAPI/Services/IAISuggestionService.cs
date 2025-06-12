@@ -10,4 +10,4 @@ public interface IAISuggestionService
     /// <param name="notes">The collection of notes to analyze.</param>
     /// <returns>A list of suggestion texts.</returns>
     Task<IEnumerable<string>> GenerateAsync(IEnumerable<Note> notes);
-} 
+}

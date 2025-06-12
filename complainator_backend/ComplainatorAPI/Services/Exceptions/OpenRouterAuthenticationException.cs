@@ -9,4 +9,4 @@ public class OpenRouterAuthenticationException : OpenRouterException
     public OpenRouterAuthenticationException(string message, Exception innerException) : base(message, innerException)
     {
     }
-} 
+}

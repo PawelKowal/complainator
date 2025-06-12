@@ -1,21 +1,6 @@
-import { createContext, useContext, useState, type FC, type PropsWithChildren } from "react";
+import { useState, type FC, type PropsWithChildren } from "react";
 import type { UserDto } from "../dto/AuthDto";
-
-export interface AuthContextType {
-  user: UserDto | null;
-  setUser: (user: UserDto | null) => void;
-  isAuthenticated: boolean;
-}
-
-export const AuthContext = createContext<AuthContextType | null>(null);
-
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
-  return context;
-};
+import { AuthContext } from "./auth.context";
 
 export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
   const [user, setUser] = useState<UserDto | null>(() => {

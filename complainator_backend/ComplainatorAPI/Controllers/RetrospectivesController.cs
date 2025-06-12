@@ -207,4 +207,4 @@ public class RetrospectivesController : ControllerBase
             return StatusCode(StatusCodes.Status500InternalServerError, new { message = "An error occurred while generating suggestions" });
         }
     }
-} 
+}

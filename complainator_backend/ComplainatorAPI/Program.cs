@@ -100,7 +100,7 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
-else 
+else
 {
     app.UseHttpsRedirection();
 }

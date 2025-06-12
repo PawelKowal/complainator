@@ -80,7 +80,7 @@ public class AISuggestionServiceTests
 
         // Assert
         await _openRouterService.Received(1).SendChatAsync(
-            Arg.Is<IEnumerable<MessageDto>>(messages => 
+            Arg.Is<IEnumerable<MessageDto>>(messages =>
                 messages.ElementAt(1).Content.Contains("What went well:") &&
                 messages.ElementAt(1).Content.Contains("- Test success") &&
                 messages.ElementAt(1).Content.Contains("What needs improvement:") &&
@@ -215,7 +215,7 @@ public class AISuggestionServiceTests
 
         // Assert
         await _openRouterService.Received(1).SendChatAsync(
-            Arg.Is<IEnumerable<MessageDto>>(messages => 
+            Arg.Is<IEnumerable<MessageDto>>(messages =>
                 messages.ElementAt(1).Content.Contains("- No notes in this category")
             ),
             Arg.Any<string>(),
@@ -256,4 +256,4 @@ public class AISuggestionServiceTests
             }}]
         }}");
     }
-} 
+}

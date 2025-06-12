@@ -83,7 +83,7 @@ REMEMBER: Output ONLY the bullet points. Nothing else."
                     throw new InvalidOperationException($"OpenRouter API error: {errorMessage}");
                 }
 
-                try 
+                try
                 {
                     // Get content from the response
                     var content = jsonElement
@@ -165,4 +165,4 @@ What went well:
 
         return string.Join("\n", notes.Select(n => $"- {n}"));
     }
-} 
+}

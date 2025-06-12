@@ -12,4 +12,4 @@ public interface ISuggestionService
     /// <param name="status">The new status to set</param>
     /// <returns>True if suggestion was found and updated, false if not found or not owned by user</returns>
     Task<bool> UpdateStatusAsync(Guid userId, Guid suggestionId, SuggestionStatus status);
-} 
+}

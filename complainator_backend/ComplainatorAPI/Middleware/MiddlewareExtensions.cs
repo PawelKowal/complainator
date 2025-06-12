@@ -16,4 +16,4 @@ namespace ComplainatorAPI.Middleware
             return builder.UseMiddleware<RequestLoggingMiddleware>();
         }
     }
-} 
+}
