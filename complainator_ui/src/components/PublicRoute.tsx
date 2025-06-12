@@ -1,6 +1,6 @@
 import type { FC, PropsWithChildren } from "react";
 import { Navigate, useLocation } from "react-router";
-import { useAuth } from "../contexts/AuthContext";
+import { useAuth } from "../hooks/useAuth";
 import { PublicLayout } from "./PublicLayout";
 
 export const PublicRoute: FC<PropsWithChildren> = ({ children }) => {

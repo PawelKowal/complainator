@@ -2,7 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import type { AxiosError } from "axios";
 import type { RegisterRequest, RegisterResponse } from "../dto/AuthDto";
 import axiosInstance from "../api/axios";
-import { useAuth } from "../hooks/useAuth";
+import { useAuth } from "./useAuth";
 import { useNavigate } from "react-router";
 
 export const useRegister = () => {
