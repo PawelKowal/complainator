@@ -1,13 +1,13 @@
 import { createContext, useContext, useState, type FC, type PropsWithChildren } from "react";
 import type { UserDto } from "../dto/AuthDto";
 
-interface AuthContextType {
+export interface AuthContextType {
   user: UserDto | null;
   setUser: (user: UserDto | null) => void;
   isAuthenticated: boolean;
 }
 
-const AuthContext = createContext<AuthContextType | null>(null);
+export const AuthContext = createContext<AuthContextType | null>(null);
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
