@@ -79,4 +79,4 @@ public class AuthControllerTests
         var unauthorized = result as UnauthorizedObjectResult;
         unauthorized.Should().NotBeNull();
     }
-} 
+}
