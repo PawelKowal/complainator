@@ -36,8 +36,7 @@ jobs:
           dotnet-version: "9.0.x"
 
       - name: Lint backend
-        working-directory: complainator_backend
-        run: dotnet format --verify-no-changes Complainator.sln
+        run: dotnet format --verify-no-changes ./complainator_backend/Complainator.sln
 
   unit-tests:
     name: Run Unit Tests
