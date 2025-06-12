@@ -27,7 +27,7 @@ Users can:
 - Browse a dashboard listing all retrospectives with names, dates, and full AI summaries.
 - View detailed retrospective pages with categorized notes and accepted insights.
 - Authenticate via email/password (ASP.NET Identity + JWT).
-- Benefit from global error handling (friendly “Wystąpił błąd, spróbuj ponownie później” banner).
+- Benefit from global error handling (friendly "Wystąpił błąd, spróbuj ponownie później" banner).
 
 ## Tech Stack
 
@@ -42,6 +42,11 @@ Users can:
   - ASP.NET Identity & JWT authentication
 - **AI Integration**
   - Openrouter.ai
+- **Testing**
+  - NUnit & NSubstitute (Backend unit tests)
+  - Jest & React Testing Library (Frontend unit tests)
+  - Playwright (E2E tests)
+  - Postman (API testing)
 - **CI/CD & Hosting**
   - GitHub Actions
   - DigitalOcean
