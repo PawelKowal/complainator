@@ -48,4 +48,4 @@ public class SuggestionsController : ControllerBase
 
         return NoContent();
     }
-} 
+}

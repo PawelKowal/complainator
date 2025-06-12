@@ -13,6 +13,19 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      # Debug step
+      - name: Debug - List directory structure
+        run: |
+          pwd
+          echo "Root directory:"
+          ls -la
+          echo "Backend directory:"
+          ls -la ./complainator_backend/
+          echo "ComplainatorAPI directory:"
+          ls -la ./complainator_backend/ComplainatorAPI/
+          echo "Looking for .sln files:"
+          find . -name "*.sln"
+
       # Frontend linting
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -35,6 +48,10 @@ jobs:
         with:
           dotnet-version: "9.0.x"
 
+      - name: Restore backend dependencies
+        working-directory: complainator_backend
+        run: dotnet restore
+
       - name: Lint backend
         working-directory: complainator_backend
         run: dotnet format --verify-no-changes Complainator.sln
@@ -53,6 +70,10 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: "9.0.x"
+
+      - name: Restore backend dependencies
+        working-directory: complainator_backend
+        run: dotnet restore
 
       - name: Run backend tests with coverage
         working-directory: complainator_backend

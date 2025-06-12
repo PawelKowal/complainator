@@ -22,23 +22,23 @@ namespace ComplainatorAPI.Middleware
         public async Task InvokeAsync(HttpContext context)
         {
             var stopwatch = Stopwatch.StartNew();
-            
+
             try
             {
                 // Log the request
                 _logger.LogInformation(
-                    "HTTP {Method} {Path} started", 
-                    context.Request.Method, 
+                    "HTTP {Method} {Path} started",
+                    context.Request.Method,
                     context.Request.Path);
-                
+
                 await _next(context);
-                
+
                 // Log the response
                 stopwatch.Stop();
                 _logger.LogInformation(
-                    "HTTP {Method} {Path} completed with {StatusCode} in {ElapsedMs}ms", 
-                    context.Request.Method, 
-                    context.Request.Path, 
+                    "HTTP {Method} {Path} completed with {StatusCode} in {ElapsedMs}ms",
+                    context.Request.Method,
+                    context.Request.Path,
                     context.Response.StatusCode,
                     stopwatch.ElapsedMilliseconds);
             }
@@ -47,13 +47,13 @@ namespace ComplainatorAPI.Middleware
                 // Log the exception (the actual exception will be logged by the GlobalExceptionHandlingMiddleware)
                 stopwatch.Stop();
                 _logger.LogWarning(
-                    "HTTP {Method} {Path} failed in {ElapsedMs}ms", 
-                    context.Request.Method, 
-                    context.Request.Path, 
+                    "HTTP {Method} {Path} failed in {ElapsedMs}ms",
+                    context.Request.Method,
+                    context.Request.Path,
                     stopwatch.ElapsedMilliseconds);
-                
+
                 throw; // Re-throw to let the GlobalExceptionHandlingMiddleware handle it
             }
         }
     }
-} 
+}

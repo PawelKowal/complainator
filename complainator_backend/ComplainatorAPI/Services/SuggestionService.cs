@@ -59,8 +59,8 @@ public class SuggestionService : ISuggestionService
             var oldStatus = suggestion.Status;
             suggestion.Status = status;
             await _context.SaveChangesAsync();
-            
-            _logger.LogInformation("Successfully updated suggestion {SuggestionId} status from {OldStatus} to {NewStatus}", 
+
+            _logger.LogInformation("Successfully updated suggestion {SuggestionId} status from {OldStatus} to {NewStatus}",
                 suggestionId, oldStatus, status);
             return true;
         }
@@ -70,4 +70,4 @@ public class SuggestionService : ISuggestionService
             throw;
         }
     }
-} 
+}

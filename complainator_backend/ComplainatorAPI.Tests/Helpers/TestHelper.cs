@@ -14,7 +14,7 @@ public static class TestHelper
             new Claim(ClaimTypes.NameIdentifier, userId),
             new Claim(ClaimTypes.Email, email)
         };
-        
+
         return new ClaimsPrincipal(new ClaimsIdentity(claims));
     }
 
@@ -29,4 +29,4 @@ public static class TestHelper
     {
         return Substitute.For<ILogger<T>>();
     }
-} 
+}

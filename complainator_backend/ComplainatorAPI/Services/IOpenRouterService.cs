@@ -15,4 +15,4 @@ public interface IOpenRouterService
         IEnumerable<MessageDto> messages,
         string? model = null,
         IDictionary<string, object>? parameters = null);
-} 
+}

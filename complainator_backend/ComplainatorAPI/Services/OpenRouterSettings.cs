@@ -10,4 +10,4 @@ public class OpenRouterSettings
         { "temperature", 0.7 },
         { "max_tokens", 500 }
     };
-} 
+}

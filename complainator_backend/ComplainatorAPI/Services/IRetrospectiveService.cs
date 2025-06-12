@@ -43,4 +43,4 @@ public interface IRetrospectiveService
     /// <param name="retrospectiveId">The ID of the retrospective to generate suggestions for.</param>
     /// <returns>The generated suggestions if successful, null if retrospective not found or not owned by user.</returns>
     Task<GenerateSuggestionsResponse?> GenerateSuggestionsAsync(Guid userId, Guid retrospectiveId);
-} 
+}

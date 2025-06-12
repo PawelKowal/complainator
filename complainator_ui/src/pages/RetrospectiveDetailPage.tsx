@@ -16,12 +16,7 @@ export const RetrospectiveDetailPage: FC = () => {
   const [errorMessage, setErrorMessage] = useState<string | undefined>();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<NoteCategory | null>(null);
-
-  if (!id) {
-    return <Navigate to="/dashboard" replace />;
-  }
-
-  const { data, isLoading, error } = useRetrospectiveDetail(id);
+  const { data, isLoading, error } = useRetrospectiveDetail(id || "");
 
   useEffect(() => {
     if (error) {
@@ -38,6 +33,10 @@ export const RetrospectiveDetailPage: FC = () => {
     setDialogOpen(false);
     setSelectedCategory(null);
   };
+
+  if (!id) {
+    return <Navigate to="/dashboard" replace />;
+  }
 
   if (isLoading) {
     return (

@@ -19,12 +19,12 @@ namespace ComplainatorAPI.DTO
     public class CreateNoteResponse
     {
         public Guid Id { get; set; }
-        
+
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public NoteCategory Category { get; set; }
-        
+
         public string Content { get; set; } = string.Empty;
 
         public DateTime CreatedAt { get; set; }
     }
-} 
+}

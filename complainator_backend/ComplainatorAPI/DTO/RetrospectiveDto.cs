@@ -12,7 +12,7 @@ namespace ComplainatorAPI.DTO
 
         [Range(1, int.MaxValue, ErrorMessage = "PerPage must be greater than 0")]
         public int PerPage { get; set; } = 10;
-        
+
         [JsonConverter(typeof(JsonStringEnumConverter))]
         [EnumDataType(typeof(SortOrder), ErrorMessage = "Invalid sort order")]
         public SortOrder Sort { get; set; } = SortOrder.DateDesc;
@@ -68,4 +68,4 @@ namespace ComplainatorAPI.DTO
         public Guid Id { get; set; }
         public string Content { get; set; } = string.Empty;
     }
-} 
+}
