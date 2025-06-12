@@ -7,6 +7,19 @@ using ComplainatorAPI.Domain.Entities;
 using ComplainatorAPI.Extensions;
 using ComplainatorAPI.Middleware;
 using ComplainatorAPI.Persistence;
+using DotNetEnv;
+
+// Load .env file
+var envPath = Path.Combine(Directory.GetCurrentDirectory(), ".env");
+if (File.Exists(envPath))
+{
+    Env.Load(envPath);
+    Console.WriteLine($"Loaded .env file from {envPath}");
+}
+else
+{
+    Console.WriteLine($"Warning: .env file not found at {envPath}");
+}
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,9 +28,16 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Add Identity
-builder.Services.AddIdentity<ApplicationUser, IdentityRole<Guid>>()
-    .AddEntityFrameworkStores<ApplicationDbContext>()
-    .AddDefaultTokenProviders();
+builder.Services.AddIdentity<ApplicationUser, IdentityRole<Guid>>(options =>
+{
+    options.Password.RequireDigit = true;
+    options.Password.RequireLowercase = true;
+    options.Password.RequireUppercase = true;
+    options.Password.RequireNonAlphanumeric = true;
+    options.Password.RequiredLength = 8;
+})
+.AddEntityFrameworkStores<ApplicationDbContext>()
+.AddDefaultTokenProviders();
 
 // Configure CORS
 builder.Services.AddCors(options =>
