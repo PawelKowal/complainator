@@ -7,4 +7,4 @@ namespace ComplainatorAPI.Domain.Entities
     {
         // Additional properties can be added here if needed in the future
     }
-} 
+}

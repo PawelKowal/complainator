@@ -19,4 +19,4 @@ namespace ComplainatorAPI.Domain.Entities
         public ICollection<Suggestion> Suggestions { get; set; } = new List<Suggestion>();
         public ICollection<AuditLog> AuditLogs { get; set; } = new List<AuditLog>();
     }
-} 
+}

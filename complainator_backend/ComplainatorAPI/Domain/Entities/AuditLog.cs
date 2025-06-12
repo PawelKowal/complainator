@@ -16,4 +16,4 @@ namespace ComplainatorAPI.Domain.Entities
         public ApplicationUser? User { get; set; }
         public Retrospective? Retrospective { get; set; }
     }
-} 
+}

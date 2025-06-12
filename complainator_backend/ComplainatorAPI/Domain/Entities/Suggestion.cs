@@ -13,4 +13,4 @@ namespace ComplainatorAPI.Domain.Entities
         // Navigation property
         public Retrospective? Retrospective { get; set; }
     }
-} 
+}

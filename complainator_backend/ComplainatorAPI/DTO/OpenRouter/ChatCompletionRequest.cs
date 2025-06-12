@@ -15,4 +15,4 @@ public class ChatCompletionRequest
 
     [JsonPropertyName("max_tokens")]
     public int? MaxTokens { get; set; }
-} 
+}

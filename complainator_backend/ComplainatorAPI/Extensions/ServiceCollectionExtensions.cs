@@ -32,4 +32,4 @@ namespace ComplainatorAPI.Extensions
             return services;
         }
     }
-} 
+}

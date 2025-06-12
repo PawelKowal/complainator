@@ -9,9 +9,9 @@ public class OpenRouterRateLimitException : OpenRouterException
         RetryAfterSeconds = retryAfterSeconds;
     }
 
-    public OpenRouterRateLimitException(string message, int retryAfterSeconds, Exception innerException) 
+    public OpenRouterRateLimitException(string message, int retryAfterSeconds, Exception innerException)
         : base(message, innerException)
     {
         RetryAfterSeconds = retryAfterSeconds;
     }
-} 
+}

@@ -24,7 +24,7 @@ public class OpenRouterService : IOpenRouterService
 
         // Configure HttpClient
         _httpClient.BaseAddress = new Uri(_settings.EndpointUrl);
-        _httpClient.DefaultRequestHeaders.Authorization = 
+        _httpClient.DefaultRequestHeaders.Authorization =
             new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _settings.ApiKey);
     }
 
@@ -36,18 +36,18 @@ public class OpenRouterService : IOpenRouterService
         try
         {
             var request = BuildRequestPayload(messages, model, parameters);
-            _logger.LogInformation("Sending request to OpenRouter API. Model: {Model}, Messages: {MessageCount}", 
+            _logger.LogInformation("Sending request to OpenRouter API. Model: {Model}, Messages: {MessageCount}",
                 request.Model, request.Messages.Count);
-            
+
             var requestJson = JsonSerializer.Serialize(request, new JsonSerializerOptions { WriteIndented = true });
             _logger.LogInformation("Request payload: {RequestJson}", requestJson);
-            
+
             var response = await _httpClient.PostAsJsonAsync("", request);
-            
+
             _logger.LogInformation("Received response from OpenRouter API. Status: {StatusCode}", response.StatusCode);
             var rawResponse = await response.Content.ReadAsStringAsync();
             _logger.LogInformation("Raw response: {RawResponse}", rawResponse);
-            
+
             // Handle HTTP errors first
             await HandleHttpErrors(response);
 
@@ -132,28 +132,28 @@ public class OpenRouterService : IOpenRouterService
         }
 
         var errorContent = await response.Content.ReadAsStringAsync();
-        _logger.LogError("OpenRouter API error: {StatusCode} - {Content}", 
+        _logger.LogError("OpenRouter API error: {StatusCode} - {Content}",
             response.StatusCode, errorContent);
 
         switch ((int)response.StatusCode)
         {
             case 401:
                 throw new OpenRouterAuthenticationException("Invalid API key or unauthorized access");
-                
+
             case 429:
                 var retryAfter = response.Headers.RetryAfter?.Delta?.Seconds ?? 60;
                 throw new OpenRouterRateLimitException(
-                    "Rate limit exceeded. Please try again later.", 
+                    "Rate limit exceeded. Please try again later.",
                     retryAfter);
-                
+
             case >= 500:
                 throw new OpenRouterServerException(
-                    "OpenRouter API server error", 
+                    "OpenRouter API server error",
                     (int)response.StatusCode);
-                
+
             default:
                 throw new OpenRouterException(
                     $"OpenRouter API error: {response.StatusCode} - {errorContent}");
         }
     }
-} 
+}

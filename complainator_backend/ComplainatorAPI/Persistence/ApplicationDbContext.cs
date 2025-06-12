@@ -7,7 +7,7 @@ namespace ComplainatorAPI.Persistence
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) 
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
         }
@@ -27,21 +27,21 @@ namespace ComplainatorAPI.Persistence
                 entity.Property(e => e.Id)
                     .ValueGeneratedOnAdd()
                     .HasDefaultValueSql("NEWID()");
-                
+
                 entity.Property(e => e.CreatedAt)
                     .HasDefaultValueSql("CURRENT_TIMESTAMP");
-                
+
                 entity.Property(e => e.AcceptedCount)
                     .HasDefaultValue(0);
-                
+
                 entity.Property(e => e.RejectedCount)
                     .HasDefaultValue(0);
-                
+
                 entity.HasOne(e => e.User)
                     .WithMany()
                     .HasForeignKey(e => e.UserId)
                     .OnDelete(DeleteBehavior.Cascade);
-                
+
                 // Create index on UserId
                 entity.HasIndex(e => e.UserId);
             });
@@ -52,19 +52,19 @@ namespace ComplainatorAPI.Persistence
                 entity.Property(e => e.Id)
                     .ValueGeneratedOnAdd()
                     .HasDefaultValueSql("NEWID()");
-                
+
                 entity.Property(e => e.CreatedAt)
                     .HasDefaultValueSql("CURRENT_TIMESTAMP");
-                
+
                 // Convert enum to string
                 entity.Property(e => e.Category)
                     .HasConversion<string>();
-                
+
                 entity.HasOne(e => e.Retrospective)
                     .WithMany(r => r.Notes)
                     .HasForeignKey(e => e.RetrospectiveId)
                     .OnDelete(DeleteBehavior.Cascade);
-                
+
                 // Create index on RetrospectiveId
                 entity.HasIndex(e => e.RetrospectiveId);
             });
@@ -75,19 +75,19 @@ namespace ComplainatorAPI.Persistence
                 entity.Property(e => e.Id)
                     .ValueGeneratedOnAdd()
                     .HasDefaultValueSql("NEWID()");
-                
+
                 entity.Property(e => e.CreatedAt)
                     .HasDefaultValueSql("CURRENT_TIMESTAMP");
-                
+
                 // Convert enum to string
                 entity.Property(e => e.Status)
                     .HasConversion<string>();
-                
+
                 entity.HasOne(e => e.Retrospective)
                     .WithMany(r => r.Suggestions)
                     .HasForeignKey(e => e.RetrospectiveId)
                     .OnDelete(DeleteBehavior.Cascade);
-                
+
                 // Create index on RetrospectiveId
                 entity.HasIndex(e => e.RetrospectiveId);
             });
@@ -97,28 +97,28 @@ namespace ComplainatorAPI.Persistence
             {
                 entity.Property(e => e.Id)
                     .ValueGeneratedOnAdd();
-                
+
                 entity.Property(e => e.Timestamp)
                     .HasDefaultValueSql("CURRENT_TIMESTAMP");
-                
+
                 // Convert enum to string
                 entity.Property(e => e.Level)
                     .HasConversion<string>();
-                
+
                 entity.HasOne(e => e.User)
                     .WithMany()
                     .HasForeignKey(e => e.UserId)
                     .OnDelete(DeleteBehavior.SetNull);
-                
+
                 entity.HasOne(e => e.Retrospective)
                     .WithMany(r => r.AuditLogs)
                     .HasForeignKey(e => e.RetrospectiveId)
                     .OnDelete(DeleteBehavior.SetNull);
-                
+
                 // Create indices on UserId and RetrospectiveId
                 entity.HasIndex(e => e.UserId);
                 entity.HasIndex(e => e.RetrospectiveId);
             });
         }
     }
-} 
+}

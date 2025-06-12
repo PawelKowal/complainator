@@ -24,4 +24,4 @@ namespace ComplainatorAPI.DTO
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public SuggestionStatus Status { get; set; }
     }
-} 
+}
