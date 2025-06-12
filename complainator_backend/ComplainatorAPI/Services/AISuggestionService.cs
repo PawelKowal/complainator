@@ -75,16 +75,16 @@ REMEMBER: Output ONLY the bullet points. Nothing else."
             // Parse and return suggestions
             if (response is JsonElement jsonElement)
             {
+                // Check if response contains error
+                if (jsonElement.TryGetProperty("error", out var errorElement))
+                {
+                    var errorMessage = errorElement.GetProperty("message").GetString();
+                    _logger.LogError("OpenRouter API returned error: {ErrorMessage}", errorMessage);
+                    throw new InvalidOperationException($"OpenRouter API error: {errorMessage}");
+                }
+
                 try 
                 {
-                    // Check if response contains error
-                    if (jsonElement.TryGetProperty("error", out var errorElement))
-                    {
-                        var errorMessage = errorElement.GetProperty("message").GetString();
-                        _logger.LogError("OpenRouter API returned error: {ErrorMessage}", errorMessage);
-                        throw new InvalidOperationException($"OpenRouter API error: {errorMessage}");
-                    }
-
                     // Get content from the response
                     var content = jsonElement
                         .GetProperty("choices")[0]
@@ -117,6 +117,10 @@ REMEMBER: Output ONLY the bullet points. Nothing else."
                         _logger.LogDebug("Extracted suggestion: {Suggestion}", suggestion);
                     }
                     return suggestions;
+                }
+                catch (InvalidOperationException)
+                {
+                    throw;
                 }
                 catch (Exception ex)
                 {
