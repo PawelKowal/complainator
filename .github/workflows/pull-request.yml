@@ -17,8 +17,14 @@ jobs:
       - name: Debug - List directory structure
         run: |
           pwd
+          echo "Root directory:"
           ls -la
+          echo "Backend directory:"
           ls -la ./complainator_backend/
+          echo "ComplainatorAPI directory:"
+          ls -la ./complainator_backend/ComplainatorAPI/
+          echo "Looking for .sln files:"
+          find . -name "*.sln"
 
       # Frontend linting
       - name: Setup Node.js
@@ -43,8 +49,8 @@ jobs:
           dotnet-version: "9.0.x"
 
       - name: Lint backend
-        working-directory: complainator_backend
-        run: dotnet format --verify-no-changes Complainator.sln
+        working-directory: complainator_backend/ComplainatorAPI
+        run: dotnet format --verify-no-changes
 
   unit-tests:
     name: Run Unit Tests
